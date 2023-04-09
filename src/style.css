@@ -1,0 +1,35 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+    outline: 1px solid black;
+}
+
+footer {
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 0;
+}
+
+footer>a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 1rem;
+}
+
+footer>a:hover {
+    transform: rotate(360deg);
+    transition-duration: 0.5s;
+}
+
+
+.svg {
+    height: 2rem;
+    width: 2rem;
+}

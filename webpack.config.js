@@ -4,6 +4,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: {
     index: './src/index.js',
+    project: './src/project.js',
+    task: './src/task.js',
+    screenController: './src/screenController.js'
   },
   devtool: 'inline-source-map',
   mode: "development",
