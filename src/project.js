@@ -16,12 +16,17 @@ const Project = (projectName, taskList) => {
 // our list of all projects, initialized as empty, will be populated with `Project` objects
 // projectController Module
 const projectController = () => {
-  const projects = [];
-  let project = taskController();
 
-  // Initialize a new empty list of tasks
-  const tasks = project.getTasks();
-
+//   const getProjectsFromStorage = () => {
+//     if (localStorage.getItem("projects")) {
+//         console.log("it's there");
+//         console.log(localStorage.getItem("projects"))
+//     } else {
+//         console.log('hehye');
+//     }
+//   };
+  let task = taskController();
+  const projects = [Project("Default", [])];
   // create a new project with a name
   const createProject = (projectTitle) => {
     // first we check if the project name exists already
