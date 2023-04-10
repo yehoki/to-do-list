@@ -7,31 +7,54 @@ const makeHeader = () => {
   return header;
 };
 
+const makeMain = (sidebar, content) => {
+  const main = document.createElement("main");
+  main.appendChild(sidebar);
+  main.appendChild(content);
+  return main;
+};
+
 const makeSidebar = () => {
+  const sidebar = document.createElement("div");
+  sidebar.className = "sidebar";
+  sidebar.textContent = "sidebar";
+  return sidebar;
+};
 
-}
-
+const makeContent = () => {
+  const content = document.createElement("div");
+  content.className = "content";
+  content.textContent = "content";
+  return content;
+};
 
 const makeFooter = () => {
-    const footer = document.createElement("footer");
-    const footerText = document.createElement("p");
-    const githubLink = document.createElement("a");
-    const githubImage = new Image();
-    githubImage.src = GithubIcon;
-    githubImage.alt = "Github logo";
-    githubImage.classList.add("svg");
-    githubLink.href = "https://github.com/yehoki/";
-    footerText.innerHTML = "Copyright © 2023 yehoki";
-    githubLink.appendChild(githubImage);
-    footer.appendChild(footerText);
-    footer.appendChild(githubLink);
-    return footer;
-  };
+  const footer = document.createElement("footer");
+  const footerText = document.createElement("p");
+  const githubLink = document.createElement("a");
+  const githubImage = new Image();
+  githubImage.src = GithubIcon;
+  githubImage.alt = "Github logo";
+  githubImage.classList.add("svg");
+  githubLink.href = "https://github.com/yehoki/";
+  footerText.innerHTML = "Copyright © 2023 yehoki";
+  githubLink.appendChild(githubImage);
+  footer.appendChild(footerText);
+  footer.appendChild(githubLink);
+  return footer;
+};
 
 const screenController = () => {
   document.body.innerHTML = "";
   document.body.appendChild(makeHeader());
+  document.body.appendChild(makeMain(makeSidebar(), makeContent()));
   document.body.appendChild(makeFooter());
 };
 
-screenController();
+
+
+
+
+export {
+    screenController
+}

@@ -7,9 +7,36 @@
     font-family: 'Courier New', Courier, monospace;
     outline: 1px solid black;
 }
+body {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    flex: 0 0 8%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+main {
+    display: flex;
+    flex: 1;
+}
+
+.sidebar {
+    flex: 0 0 20%;
+}
+
+.content { 
+    flex: 1;
+    display: flex;
+}
 
 footer {
-    min-height: 50px;
+    flex: 0 0 8%;
     display: flex;
     justify-content: center;
     align-items: center;
