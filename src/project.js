@@ -23,9 +23,17 @@ const projectController = () => {
   const tasks = project.getTasks();
 
   // create a new project with a name
-  const createProject = (projectName) => {
-    const newProject = Project(projectName, []);
-    addProject(newProject);
+  const createProject = (projectTitle) => {
+    // first we check if the project name exists already
+    const projectExists = projects.some(
+      (project) => project.projectName === projectTitle
+    );
+    if (!projectExists) {
+      const newProject = Project(projectTitle, []);
+      addProject(newProject);
+      return true;
+    }
+    return false;
   };
 
   // Add a new project to the array of projects
@@ -39,9 +47,7 @@ const projectController = () => {
   return {
     createProject,
     getProjects,
-  }
+  };
 };
 
-export {
-    projectController
-}
+export { projectController };

@@ -35,11 +35,13 @@ const makeProjectInput = (displayNow = false) => {
     newProjectForm.appendChild(projectLabel);
     newProjectForm.appendChild(projectNameInput);
     newProjectForm.appendChild(projectSubmit);
+    // creates a new project on submitting the form
     newProjectForm.onsubmit = (e) => {
         e.preventDefault();
-        project.createProject(projectNameInput.value);
-        console.log(projectNameInput.value);
-        console.log(project.getProjects());
+        if(project.createProject(projectNameInput.value)){
+            console.log(projectNameInput.value);
+            console.log(project.getProjects());
+        }
     }
     return newProjectForm;
 }
