@@ -24,13 +24,24 @@ const projectController = () => {
 
   // create a new project with a name
   const createProject = (projectName) => {
-    const newProject = new Project(projectName, (taskList = []));
-    return newProject;
+    const newProject = Project(projectName, []);
+    addProject(newProject);
   };
 
   // Add a new project to the array of projects
   const addProject = (project) => {
     projects.push(project);
   };
+
+  const getProjects = () => projects;
+
   // based on the current project we are working in, we want to get the whole projec
+  return {
+    createProject,
+    getProjects,
+  }
 };
+
+export {
+    projectController
+}

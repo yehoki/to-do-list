@@ -16,7 +16,7 @@ const Task = (title, description, dueDate, priority, notes, location) => {
 };
 
 const taskController = () => {
-  const tasks = [];
+  const tasks = [1,2,3,4];
   /* Here we will store the tasks themselves, for now we initialize an empty task list at
   the beginning, and will move on the semi-permanent storage after.
 
@@ -34,7 +34,7 @@ const taskController = () => {
     notes,
     location
   ) => {
-    const newTask = new Task(
+    const newTask = Task(
       title,
       description,
       dueDate,
