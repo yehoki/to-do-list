@@ -1,5 +1,8 @@
 // screenController will display the tasks to the DOM, so anything to do with the DOM and manipulating will be done from here
 import GithubIcon from "./github-mark.svg";
+import { taskController } from "./task";
+
+
 
 const makeHeader = () => {
   const header = document.createElement("header");
@@ -25,6 +28,11 @@ const makeContent = () => {
   const content = document.createElement("div");
   content.className = "content";
   content.textContent = "content";
+
+  const taskButton = document.createElement("button");
+  taskButton.setAttribute("id", "add-task");
+  taskButton.textContent = "testbutton";
+  content.appendChild(taskButton);
   return content;
 };
 
@@ -50,10 +58,6 @@ const screenController = () => {
   document.body.appendChild(makeMain(makeSidebar(), makeContent()));
   document.body.appendChild(makeFooter());
 };
-
-
-
-
 
 export {
     screenController
