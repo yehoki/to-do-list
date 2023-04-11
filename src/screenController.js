@@ -38,7 +38,7 @@ export default class screenController {
 
     const projectsArea = document.createElement("div");
     projectsArea.id = "projects-area";
-    // displayProjects(projectsArea);
+    screenController.displayProjects(projectsArea);
 
     const addProjectButton = document.createElement("button");
     addProjectButton.setAttribute("id", "new-project");
@@ -61,7 +61,7 @@ export default class screenController {
   static makeContent() {
     const content = document.createElement("div");
     content.className = "content";
-    
+
     const taskArea = document.createElement("div");
     const projectTitle = document.createElement("h3");
     const taskGrid = document.createElement("div");
@@ -107,34 +107,28 @@ export default class screenController {
   }
 
   // HELPER METHOD FOR REPEAT ACTIONS
-
-
-}
-
-const displayProjects = (projectArea) => {
-  console.log(document.getElementById("projects-area"), projectArea);
-  console.log(Todos.getProjects());
-  if (document.getElementById("projects-area") === null) {
-    populateProjectArea(projectArea);
-  } else {
-    document.getElementById("projects-area").innerHTML = "";
-    populateProjectArea(document.getElementById("projects-area"));
+  static displayProjects(projectArea) {
+    if (document.getElementById("projects-area") === null) {
+        screenController.populateProjectArea(projectArea);
+    } else {
+      document.getElementById("projects-area").innerHTML = "";
+      screenController.populateProjectArea(document.getElementById("projects-area"));
+    }
   }
-};
 
-const populateProjectArea = (projectsArea) => {
-  todolist
-    .getProjects()
-    .map((projectObject) => projectObject.projectName)
-    .forEach((projectName) => {
-      const projectEntry = document.createElement("div");
-      projectEntry.classList.add("project-tab");
-      projectEntry.id = projectName;
-      projectEntry.textContent = projectName;
-      projectsArea.appendChild(projectEntry);
-    });
-};
-
+  static populateProjectArea(projectArea) {
+    todolist
+      .getProjects()
+      .map((projectObject) => projectObject.projectName)
+      .forEach((projectName) => {
+        const projectEntry = document.createElement("div");
+        projectEntry.classList.add("project-tab");
+        projectEntry.id = projectName;
+        projectEntry.textContent = projectName;
+        projectArea.appendChild(projectEntry);
+      });
+  }
+}
 const makeProjectInput = (displayNow = false) => {
   // Creating and displaying the box to display the 'new project' box, false by default
   const newProjectForm = document.createElement("form");

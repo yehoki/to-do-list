@@ -3,22 +3,24 @@ import Project from "./project";
 
 export default class Todos {
   constructor() {
-    this.projects = [];
+    this.projects = [(new Project('Test', []))];
   }
 
-  static getProjects() {
-      return this.projects;
+  getProjects() {
+    return this.projects;
   }
 
-  static addProject(project) {
+  addProject(project) {
     this.projects.push(project);
   }
 
-  static deleteProject(projectName) {
+  deleteProject(projectName) {
     this.projects.filter((project) => project.projectName !== projectName);
   }
 
-  static getTasks(projectName) {
-    return this.projects.filter(project => project.projectName === projectName)[0].taskList;
+  getTasks(projectName) {
+    return this.projects.filter(
+      (project) => project.projectName === projectName
+    )[0].taskList;
   }
 }
