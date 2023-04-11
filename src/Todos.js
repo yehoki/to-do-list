@@ -6,19 +6,19 @@ export default class Todos {
     this.projects = [];
   }
 
-  getProjects() {
-    return this.projects;
+  static getProjects() {
+      return this.projects;
   }
 
-  addProject(project) {
+  static addProject(project) {
     this.projects.push(project);
   }
 
-  deleteProject(projectName) {
+  static deleteProject(projectName) {
     this.projects.filter((project) => project.projectName !== projectName);
   }
 
-  getTasks(projectName) {
+  static getTasks(projectName) {
     return this.projects.filter(project => project.projectName === projectName)[0].taskList;
   }
 }

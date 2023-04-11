@@ -2,51 +2,14 @@
 We will be using tasks in order to store, create and manipulate the 'todo' list objects.
 */
 
-// Task factory
 
-const Task = (title, description, dueDate, priority, notes, location) => {
-  return {
-    title,
-    description,
-    dueDate, // If this was in TS, it would have a strict Date type for example.
-    priority,
-    notes,
-    location,
-  };
-};
+export default class Task {
+  constructor(title, description, dueDate = '', priority) {
+    this.title = title
+    this.description = description
+    this.dueDate = dueDate
+    this.priority = priority
+  }
+}
 
-const taskController = () => {
-  /* Here we will store the tasks themselves, for now we initialize an empty task list at
-  the beginning, and will move on the semi-permanent storage after.
 
-  I have to remember that I will store each list of tasks in a project,
-  so I should NOT store the tasks initially in the taskController,
-  but rather in the projectController area.
-   */
-
-  // Creates a task
-  const createTask = (
-    title,
-    description,
-    dueDate,
-    priority,
-    notes,
-    location
-  ) => {
-    const newTask = Task(
-      title,
-      description,
-      dueDate,
-      priority,
-      notes,
-      location
-    );
-    return newTask;
-  };
-
-  //
-  return {
-    createTask,
-  };
-};
-export { taskController };

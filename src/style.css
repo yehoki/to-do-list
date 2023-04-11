@@ -54,6 +54,10 @@ main {
     padding: 1rem;
 }
 
+.task-entry {
+    padding: 2rem 2rem;
+}
+
 footer {
     flex: 0 0 8%;
     display: flex;
