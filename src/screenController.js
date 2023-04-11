@@ -9,7 +9,7 @@ const displayProjects = (projectArea) => {
   if (document.getElementById("projects-area") === null) {
     populateProjectArea(projectArea);
   } else {
-    document.getElementById("projects-area").innerHTML = ""; 
+    document.getElementById("projects-area").innerHTML = "";
     populateProjectArea(document.getElementById("projects-area"));
   }
 };
@@ -98,18 +98,48 @@ const makeSidebar = () => {
   return sidebar;
 };
 
+const displayTasks = (taskArea) => {
+  if (document.getElementById("task-area") === null) {
+    populateTaskArea(taskArea);
+  } else {
+    document.getElementById("task-area").innerHTML = "";
+    populateTaskArea(document.getElementById("task-area"));
+  }
+};
+
+const populateTaskArea = (taskArea) => {
+  project.getTasks().forEach((taskName) => {
+    const taskCard = document.createElement("div");
+    taskCard.classList.add("task");
+    taskCard.id = taskName;
+    taskCard.textContent = taskName;
+    taskArea.appendChild(taskCard);
+  });
+};
+
 const makeContent = () => {
   const content = document.createElement("div");
   content.className = "content";
-  content.textContent = "content";
+
+  const taskArea = document.createElement("div");
+  taskArea.id = "task-area";
+  taskArea.className = "task-area";
+  displayTasks(taskArea);
+  //   Display the current tasks in the project
+
   //   creates the 'add task' button';
   const taskButton = document.createElement("button");
   taskButton.setAttribute("id", "add-task");
   taskButton.textContent = "Add Task";
   taskButton.addEventListener("click", () => {
-    // task.getTasks();a
+    
+    /*
+        1. Show up a form with entries for all defined Task properties
+        2. Default "no-entry" values for most of them
+    */
     console.warn("We do a new task");
   });
+  content.appendChild(taskArea);
   content.appendChild(taskButton);
   return content;
 };

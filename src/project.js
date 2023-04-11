@@ -16,7 +16,7 @@ const Project = (projectName, taskList) => {
 // our list of all projects, initialized as empty, will be populated with `Project` objects
 // projectController Module
 const projectController = () => {
-
+// Local Storage logic to be added in later on.
 //   const getProjectsFromStorage = () => {
 //     if (localStorage.getItem("projects")) {
 //         console.log("it's there");
@@ -24,9 +24,11 @@ const projectController = () => {
 //     } else {
 //         console.log('hehye');
 //     }
-//   };
+//   }; 
+
+
   let task = taskController();
-  const projects = [Project("Default", [])];
+  const projects = [Project("Default", [1,2,3,4])];
   // create a new project with a name
   const createProject = (projectTitle) => {
     // first we check if the project name exists already
@@ -48,10 +50,19 @@ const projectController = () => {
 
   const getProjects = () => projects;
 
+//   Get all the tasks related to the project
+  const getTasks = (projectTitle = 'Default') => {
+    const projectIndex = projects.map(element => element.projectName).indexOf(projectTitle);
+    if(projectIndex !== -1) {
+        return projects[projectIndex].taskList;
+    }
+  };
+
   // based on the current project we are working in, we want to get the whole projec
   return {
     createProject,
     getProjects,
+    getTasks,
   };
 };
 
