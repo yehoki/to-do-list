@@ -37,7 +37,21 @@ main {
 .content { 
     flex: 1;
     display: flex;
+    justify-content: center;
     align-items: center;
+    padding: 4rem 4rem;
+}
+
+
+.task-area {
+    flex: 1;
+}
+
+.task-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
 }
 
 footer {

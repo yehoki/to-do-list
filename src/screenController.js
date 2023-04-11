@@ -1,7 +1,6 @@
 // screenController will display the tasks to the DOM, so anything to do with the DOM and manipulating will be done from here
 import GithubIcon from "./github-mark.svg";
 import { projectController } from "./project";
-import { taskController } from "./task";
 
 const project = projectController();
 
@@ -98,49 +97,110 @@ const makeSidebar = () => {
   return sidebar;
 };
 
-const displayTasks = (taskArea) => {
-  if (document.getElementById("task-area") === null) {
-    populateTaskArea(taskArea);
+const displayTasks = (taskGrid) => {
+  if (document.getElementById("task-grid") === null) {
+    populateTaskArea(taskGrid);
   } else {
-    document.getElementById("task-area").innerHTML = "";
-    populateTaskArea(document.getElementById("task-area"));
+    document.getElementById("task-grid").innerHTML = "";
+    populateTaskArea(document.getElementById("task-grid"));
   }
 };
 
-const populateTaskArea = (taskArea) => {
+const populateTaskArea = (taskGrid) => {
   project.getTasks().forEach((taskName) => {
     const taskCard = document.createElement("div");
     taskCard.classList.add("task");
     taskCard.id = taskName;
     taskCard.textContent = taskName;
-    taskArea.appendChild(taskCard);
+    taskGrid.appendChild(taskCard);
   });
 };
 
-const makeContent = () => {
-  const content = document.createElement("div");
-  content.className = "content";
+//  generates a new form for inputting a new task
+const makeNewTaskEntry = () => {
+  const taskEntry = document.createElement("form");
+  taskEntry.id = "task-entry";
+  // title
+  const taskTitleLabel = document.createElement("label");
+  const taskTitle = document.createElement("input");
+  taskTitle.type = "test";
+  taskTitle.placeholder = "Title";
+  taskTitle.required = true;
+  taskTitleLabel.htmlFor = "task-title";
+  taskTitle.id = taskTitleLabel.htmlFor;
+  // description
+  const taskDescriptionLabel = document.createElement("label");
+  const taskDescription = document.createElement("input");
+  taskDescription.type = "text";
+  taskDescription.placeholder = "Description...";
+  taskDescriptionLabel.htmlFor = "task-description";
+  taskDescription.id = taskDescriptionLabel.htmlFor;
+  // dueDate
+  const taskDueDateLabel = document.createElement("label");
+  const taskDueDate = document.createElement("input");
+  taskDueDate.type = "date";
+  taskDueDateLabel.htmlFor = "task-due-date";
+  taskDueDate.id = taskDueDateLabel.htmlFor;
 
-  const taskArea = document.createElement("div");
-  taskArea.id = "task-area";
-  taskArea.className = "task-area";
-  displayTasks(taskArea);
-  //   Display the current tasks in the project
+  taskEntry.appendChild(taskTitleLabel);
+  taskEntry.appendChild(taskTitle);
+  taskEntry.appendChild(taskDescriptionLabel);
+  taskEntry.appendChild(taskDescription);
+  taskEntry.appendChild(taskDueDateLabel);
+  taskEntry.appendChild(taskDueDate);
 
-  //   creates the 'add task' button';
+  return taskEntry;
+};
+
+const makeNewTaskButton = () => {
   const taskButton = document.createElement("button");
   taskButton.setAttribute("id", "add-task");
   taskButton.textContent = "Add Task";
   taskButton.addEventListener("click", () => {
-    
+    document.getElementById("add-task-area").innerHTML = "";
+    document.getElementById("add-task-area").appendChild(makeNewTaskEntry());
     /*
-        1. Show up a form with entries for all defined Task properties
-        2. Default "no-entry" values for most of them
-    */
+          1. Show up a form with entries for all defined Task properties
+          2. Default "no-entry" values for most of them
+      */
     console.warn("We do a new task");
   });
+  return taskButton;
+};
+
+const makeContent = () => {
+  const content = document.createElement("div");
+  const taskArea = document.createElement("div");
+  const projectTitle = document.createElement("h3");
+  const taskGrid = document.createElement("div");
+  const addTaskArea = document.createElement("div");
+
+  content.className = "content";
+
+  //   for now, leave as default - later change to display the selected project name
+  projectTitle.textContent = "Default";
+  taskGrid.id = "task-grid";
+  taskGrid.className = "task-grid";
+  //  the tasks will be displayed inside of the taskGrid element
+  //  inside the add task area we will have the 'add task' button,
+  //  once pressed it will be replaced by the form to add a new task.
+  addTaskArea.id = "add-task-area";
+  addTaskArea.className = "add-task-area";
+  
+  // move this later to a function which displays the button itself,
+  // for it to be called to replace the task form once submitted
+
+  addTaskArea.appendChild(makeNewTaskButton());
+
+  taskArea.id = "task-area";
+  taskArea.className = "task-area";
+  displayTasks(taskGrid);
+
+  taskArea.appendChild(projectTitle);
+  taskArea.appendChild(taskGrid);
+  taskArea.appendChild(addTaskArea);
+
   content.appendChild(taskArea);
-  content.appendChild(taskButton);
   return content;
 };
 
