@@ -6,7 +6,9 @@ module.exports = {
     index: './src/index.js',
     project: './src/project.js',
     task: './src/task.js',
-    screenController: './src/screenController.js'
+    screenController: './src/screenController.js',
+    storage: './src/Storage.js',
+    todos: './src/Todos.js',
   },
   devtool: 'inline-source-map',
   mode: "development",
