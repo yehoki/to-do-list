@@ -1,5 +1,6 @@
 // screenController will display the tasks to the DOM, so anything to do with the DOM and manipulating will be done from here
 import GithubIcon from "./github-mark.svg";
+import Project from "./project";
 import Todos from "./Todos";
 
 const todolist = new Todos();
@@ -40,20 +41,13 @@ export default class screenController {
     projectsArea.id = "projects-area";
     screenController.displayProjects(projectsArea);
 
-    const addProjectButton = document.createElement("button");
-    addProjectButton.setAttribute("id", "new-project");
-    addProjectButton.textContent = "New Project";
-    addProjectButton.addEventListener("click", () => {
-      console.warn("Nothing");
-      //   console.log(displayProjects());
-      /*Add the logic for the following:
-      1. Bring up an input for a new project
-      2. Add the logic to the list of projects
-      3. Set the new project as the 'current' one and render it out */
-      //   displayProjects();
-    });
+    const addProjectArea = document.createElement("div");
+    addProjectArea.className = "add-project-area";
+    addProjectArea.id = "add-project-area";
+
+    addProjectArea.appendChild(screenController.makeNewProjectButton());
     sidebar.appendChild(projectsArea);
-    sidebar.appendChild(addProjectButton);
+    sidebar.appendChild(addProjectArea);
     // sidebar.appendChild(makeProjectInput());
     return sidebar;
   }
@@ -109,10 +103,12 @@ export default class screenController {
   // HELPER METHOD FOR REPEAT ACTIONS
   static displayProjects(projectArea) {
     if (document.getElementById("projects-area") === null) {
-        screenController.populateProjectArea(projectArea);
+      screenController.populateProjectArea(projectArea);
     } else {
       document.getElementById("projects-area").innerHTML = "";
-      screenController.populateProjectArea(document.getElementById("projects-area"));
+      screenController.populateProjectArea(
+        document.getElementById("projects-area")
+      );
     }
   }
 
@@ -128,31 +124,66 @@ export default class screenController {
         projectArea.appendChild(projectEntry);
       });
   }
+
+  static makeNewProjectButton() {
+    const addProjectButton = document.createElement("button");
+    addProjectButton.id = "new-project";
+    addProjectButton.textContent = "New Project";
+    addProjectButton.addEventListener("click", () => {
+      console.warn("Nothing");
+      document.getElementById("add-project-area").innerHTML = "";
+      document
+        .getElementById("add-project-area")
+        .appendChild(screenController.makeProjectInput());
+      // display the new project form;
+      /*
+        WHEN WE CREATE A NEW PROJECT, THE BUTTON DISAPPEARS AND A FORM APPEARS
+        ON SUBMIT FOR FORM THE FORM GETS SENT, DISAPPEARS AND THE BUTTON APPEARS
+       */
+      //   console.log(displayProjects());
+      /*Add the logic for the following:
+      1. Bring up an input for a new project
+      2. Add the logic to the list of projects
+      3. Set the new project as the 'current' one and render it out */
+      screenController.displayProjects();
+    });
+    return addProjectButton;
+  }
+
+  static makeProjectInput() {
+    // Creating and displaying the box to display the 'new project' box, false by default
+    const newProjectForm = document.createElement("form");
+    newProjectForm.id = "new-project-form";
+    const projectLabel = document.createElement("label");
+    const projectNameInput = document.createElement("input");
+    const projectSubmit = document.createElement("button");
+    projectLabel.textContent = "Project name:";
+    projectLabel.htmlFor = "project-name";
+    projectNameInput.id = projectLabel.htmlFor;
+    projectSubmit.textContent = "Add project";
+    newProjectForm.appendChild(projectLabel);
+    newProjectForm.appendChild(projectNameInput);
+    newProjectForm.appendChild(projectSubmit);
+    // creates a new project on submitting the form
+    newProjectForm.onsubmit = (e) => {
+      e.preventDefault();
+      if (todolist.addProject(new Project(projectNameInput.value, []))) {
+        console.warn(`NEW PROJECT AAAAAH: ${projectNameInput.value}`);
+        console.log(todolist.getProjects());
+      }
+
+      //   if (project.createProject(projectNameInput.value)) {
+      //     console.warn("New project added");
+      //   }
+      document.getElementById("add-project-area").innerHTML = "";
+      document
+        .getElementById("add-project-area")
+        .appendChild(screenController.makeNewProjectButton());
+        screenController.displayProjects();
+    };
+    return newProjectForm;
+  }
 }
-const makeProjectInput = (displayNow = false) => {
-  // Creating and displaying the box to display the 'new project' box, false by default
-  const newProjectForm = document.createElement("form");
-  newProjectForm.setAttribute("id", "new-project-form");
-  const projectLabel = document.createElement("label");
-  const projectNameInput = document.createElement("input");
-  const projectSubmit = document.createElement("button");
-  projectLabel.textContent = "Project name:";
-  projectLabel.htmlFor = "project-name";
-  projectNameInput.id = projectLabel.htmlFor;
-  projectSubmit.textContent = "Add project";
-  newProjectForm.appendChild(projectLabel);
-  newProjectForm.appendChild(projectNameInput);
-  newProjectForm.appendChild(projectSubmit);
-  // creates a new project on submitting the form
-  newProjectForm.onsubmit = (e) => {
-    e.preventDefault();
-    if (project.createProject(projectNameInput.value)) {
-      console.warn("New project added");
-    }
-    displayProjects();
-  };
-  return newProjectForm;
-};
 
 const makeSidebar = () => {
   const sidebar = document.createElement("div");

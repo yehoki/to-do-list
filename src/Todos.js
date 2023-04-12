@@ -1,17 +1,26 @@
 // import something
-import Project from "./project";
+import Project  from "./project";
+
+// const projectClass = new Project();
 
 export default class Todos {
   constructor() {
-    this.projects = [(new Project('Test', []))];
+    this.projects = [new Project("Test", [])];
   }
 
   getProjects() {
     return this.projects;
   }
 
-  addProject(project) {
-    this.projects.push(project);
+  addProject(projectObject) {
+    const projectExists = this.getProjects().some(
+      (project) => project.projectName === projectObject.projectName
+    );
+    if (!projectExists) {
+      this.projects.push(projectObject);
+      return true;
+    }
+    return false;
   }
 
   deleteProject(projectName) {
