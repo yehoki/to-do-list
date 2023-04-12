@@ -230,7 +230,7 @@ export default class screenController {
         Storage.getTodos().getProjects().length > 0
           ? new Project(projectNameInput.value)
           : new Project(projectNameInput.value, [], true);
-      Storage.addProject(new Project(projectNameInput.value));
+      Storage.addProject(newProject);
       document.getElementById("add-project-area").innerHTML = "";
       document
         .getElementById("add-project-area")
@@ -297,21 +297,23 @@ export default class screenController {
     taskEntry.onsubmit = (e) => {
       e.preventDefault();
       // create a new task object
-      Storage.addTask(
-        new Task(
-          taskTitle.value,
-          taskDescription.value,
-          taskDueDate.value,
-          taskPriority.value
-        )
-      );
+      if (Storage.getTodos().getProjects().length > 0) {
+        Storage.addTask(
+          new Task(
+            taskTitle.value,
+            taskDescription.value,
+            taskDueDate.value,
+            taskPriority.value
+          )
+        );
+      } else {
+        alert("Please make a new project first");
+      }
 
       screenController.displayTasks(document.getElementById("task-grid"));
       document.getElementById("add-task-area").innerHTML = "";
       document.getElementById("add-task-area").style.backgroundColor = "white";
       // push to task list
-
-      // rerender tasks
       // show add task button again
       document
         .getElementById("add-task-area")
