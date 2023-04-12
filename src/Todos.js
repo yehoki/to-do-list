@@ -6,11 +6,13 @@ import Task from "./task";
 
 export default class Todos {
   constructor() {
-    this.projects = [new Project("Test", [
-        new Task(
-            'test task', 'test', 'wqewq', 'none'
-        )
-    ], true)];
+    this.projects = [
+      new Project(
+        "Test",
+        [new Task("test task", "test", "wqewq", "none")],
+        true
+      ),
+    ];
   }
 
   getProjects() {
@@ -41,8 +43,8 @@ export default class Todos {
       .indexOf(projectObject);
   }
 
-  getTasks(projectObject) {
-    return this.projects[this.getProjectIndex(projectObject)].getTasks();
+  getCurrentTasks() {
+    return this.projects[this.getActiveProjectIndex()].getTasks();
   }
 
   getActiveProjectIndex() {

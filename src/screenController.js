@@ -1,6 +1,7 @@
 // screenController will display the tasks to the DOM, so anything to do with the DOM and manipulating will be done from here
 import GithubIcon from "./github-mark.svg";
 import Project from "./project";
+import Task from "./task";
 import Todos from "./Todos";
 
 const todolist = new Todos();
@@ -72,14 +73,13 @@ export default class screenController {
     addTaskArea.className = "add-task-area";
     // move this later to a function which displays the button itself,
     // for it to be called to replace the task form once submitted
-    // addTaskArea.appendChild(makeNewTaskButton());
+    addTaskArea.appendChild(screenController.makeNewTaskButton());
     taskArea.id = "task-area";
     taskArea.className = "task-area";
     screenController.displayTasks(taskGrid);
     taskArea.appendChild(projectTitle);
     taskArea.appendChild(taskGrid);
     taskArea.appendChild(addTaskArea);
-
     content.appendChild(taskArea);
     return content;
   }
@@ -135,7 +135,6 @@ export default class screenController {
       screenController.populateTaskArea(document.getElementById("task-grid"));
     }
   }
-
   static populateTaskArea(taskGrid) {
     todolist
       .getActiveProject()
@@ -148,6 +147,7 @@ export default class screenController {
         taskGrid.appendChild(taskCard);
       });
   }
+  // CREATE A NEW PROJECT BUTTON  
 
   static makeNewProjectButton() {
     const addProjectButton = document.createElement("button");
@@ -173,7 +173,7 @@ export default class screenController {
     });
     return addProjectButton;
   }
-
+  // GENERATES THE INPUT FOR A NEW PROJECT
   static makeProjectInput() {
     // Creating and displaying the box to display the 'new project' box, false by default
     const newProjectForm = document.createElement("form");
@@ -208,6 +208,7 @@ export default class screenController {
     return newProjectForm;
   }
 
+  // GENERATES THE FORM FOR INPUTTING A NEW TASK
   static makeNewTaskEntry() {
     const taskEntry = document.createElement("form");
     taskEntry.id = "task-entry";
@@ -252,34 +253,33 @@ export default class screenController {
     taskEntry.onsubmit = (e) => {
       e.preventDefault();
       // create a new task object
-      const newTask = task.createTask(
-        taskTitle.value,
-        taskDescription.value,
-        taskDueDate.value,
-        0,
-        0,
-        0
-      );
-      project.addTask(newTask);
-      displayTasks(document.getElementById("task-grid"));
+      todolist.getActiveProject().addTask(
+        new Task(
+            taskTitle.value,
+            taskDescription.value,
+            taskDueDate.value,
+            'None'
+        )
+      )
+      screenController.displayTasks(document.getElementById("task-grid"));
       document.getElementById("add-task-area").innerHTML = "";
       // push to task list
 
       // rerender tasks
       // show add task button again
-      document.getElementById("add-task-area").appendChild(makeNewTaskButton());
-      console.log(project.getTasks());
+      document.getElementById("add-task-area").appendChild(screenController.makeNewTaskButton());
+      console.log(todolist.getCurrentTasks());
     };
     return taskEntry;
   }
-
+  // GENERATES A NEW TASK BUTTON
   static makeNewTaskButton() {
     const taskButton = document.createElement("button");
     taskButton.setAttribute("id", "add-task");
     taskButton.textContent = "Add Task";
     taskButton.addEventListener("click", () => {
       document.getElementById("add-task-area").innerHTML = "";
-      document.getElementById("add-task-area").appendChild(makeNewTaskEntry());
+      document.getElementById("add-task-area").appendChild(screenController.makeNewTaskEntry());
       /*
           1. Show up a form with entries for all defined Task properties
           2. Default "no-entry" values for most of them
