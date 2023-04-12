@@ -7,10 +7,10 @@ import toDate from 'date-fns/toDate'
 
 
 export default class Task {
-  constructor(title, description, dueDate = '', priority) {
+  constructor(title, description, dueDate, priority) {
     this.title = title
     this.description = description
-    this.dueDate = Date.parse(dueDate);
+    this.dueDate = dueDate === "" ? "" : Date.parse(dueDate);
     this.priority = priority
   }
 
@@ -19,7 +19,7 @@ export default class Task {
   }
 
   getFormattedDate() {
-    return format(toDate(this.dueDate), 'E, do MMM YYY');
+    return this.dueDate === "" ? "" : format(toDate(this.dueDate), 'E, do MMM YYY');
   }
 
 

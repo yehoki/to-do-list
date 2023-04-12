@@ -123,9 +123,9 @@ export default class screenController {
         projectEntry.id = projectName;
         projectEntry.textContent = projectName;
         projectEntry.addEventListener("click", () => {
-            todolist.setProjectActive(projectName);
-            screenController.displayTasks();
-        })
+          todolist.setProjectActive(projectName);
+          screenController.displayTasks();
+        });
         projectArea.appendChild(projectEntry);
       });
   }
@@ -148,21 +148,20 @@ export default class screenController {
         const taskTitle = document.createElement("h4");
         const taskDescription = document.createElement("div");
         const taskDueDate = document.createElement("div");
-        const taskPriority = document.createElement("div");
         taskCard.className = "task";
         taskCard.id = task.title; //Later change this to unique id
+        taskCard.style.backgroundColor = this.getPriorityColour(task.priority);
         taskTitle.textContent = task.title;
-        taskDescription.textContent = task.description;
+        console.log(task.description, task.description === "");
+        taskDescription.textContent = task.description === "" ? "  " : task.description;
         taskDueDate.textContent = task.getFormattedDate();
-        taskPriority.textContent = task.priority;
         taskCard.appendChild(taskTitle);
         taskCard.appendChild(taskDescription);
         taskCard.appendChild(taskDueDate);
-        taskCard.appendChild(taskPriority);
         taskGrid.appendChild(taskCard);
       });
   }
-  // CREATE A NEW PROJECT BUTTON  
+  // CREATE A NEW PROJECT BUTTON
 
   static makeNewProjectButton() {
     const addProjectButton = document.createElement("button");
@@ -248,40 +247,60 @@ export default class screenController {
     taskDueDate.type = "date";
     taskDueDateLabel.htmlFor = "task-due-date";
     taskDueDate.id = taskDueDateLabel.htmlFor;
+    // priority
 
+    const taskPriorityLabel = document.createElement("label");
+    const taskPriority = document.createElement("input");
+    taskPriority.type = "range";
+    taskPriority.min = "0";
+    taskPriority.max = "255";
+    taskPriorityLabel.htmlFor = "task-priority";
+    taskPriority.id = taskPriorityLabel.htmlFor;
+    taskPriorityLabel.textContent = "Priority";
+    taskPriority.addEventListener("input", () => {
+      this.changeColour(taskPriority);
+    });
     //   submit form button
     const submitTaskButton = document.createElement("button");
     //   submitTaskButton.type = "submit";
     submitTaskButton.textContent = "Add task";
-
     // add cancel form button
-
     taskEntry.appendChild(taskTitleLabel);
     taskEntry.appendChild(taskTitle);
     taskEntry.appendChild(taskDescriptionLabel);
     taskEntry.appendChild(taskDescription);
     taskEntry.appendChild(taskDueDateLabel);
     taskEntry.appendChild(taskDueDate);
+    taskEntry.appendChild(taskPriorityLabel);
+    taskEntry.appendChild(taskPriority);
     taskEntry.appendChild(submitTaskButton);
     // submit the task
     taskEntry.onsubmit = (e) => {
       e.preventDefault();
+      console.log(taskDueDate.value, taskDueDate.value === "");
+
       // create a new task object
-      todolist.getActiveProject().addTask(
-        new Task(
+      todolist
+        .getActiveProject()
+        .addTask(
+          new Task(
             taskTitle.value,
             taskDescription.value,
             taskDueDate.value,
-            'None'
-        )
-      )
+            taskPriority.value
+          )
+        );
+      
       screenController.displayTasks(document.getElementById("task-grid"));
       document.getElementById("add-task-area").innerHTML = "";
+      document.getElementById("add-task-area").style.backgroundColor = "white";
       // push to task list
 
       // rerender tasks
       // show add task button again
-      document.getElementById("add-task-area").appendChild(screenController.makeNewTaskButton());
+      document
+        .getElementById("add-task-area")
+        .appendChild(screenController.makeNewTaskButton());
       console.log(todolist.getCurrentTasks());
     };
     return taskEntry;
@@ -293,7 +312,9 @@ export default class screenController {
     taskButton.textContent = "Add Task";
     taskButton.addEventListener("click", () => {
       document.getElementById("add-task-area").innerHTML = "";
-      document.getElementById("add-task-area").appendChild(screenController.makeNewTaskEntry());
+      document
+        .getElementById("add-task-area")
+        .appendChild(screenController.makeNewTaskEntry());
       /*
           1. Show up a form with entries for all defined Task properties
           2. Default "no-entry" values for most of them
@@ -301,5 +322,19 @@ export default class screenController {
       console.warn("We do a new task");
     });
     return taskButton;
+  }
+
+  static getPriorityColour(priorityValue) {
+    return `rgb(
+        255,
+        ${255 - parseInt(priorityValue)},
+        ${255 - parseInt(priorityValue)},
+        0.75
+    )`;
+  }
+
+  static changeColour(taskPriority) {
+    document.getElementById("add-task-area").style.backgroundColor =
+      this.getPriorityColour(taskPriority.value);
   }
 }

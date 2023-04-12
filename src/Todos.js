@@ -14,7 +14,7 @@ export default class Todos {
             "test task",
             "test",
             new Date(Date.parse(2023, 3, 12)),
-            "none"
+            25
           ),
         ],
         true
