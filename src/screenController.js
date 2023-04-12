@@ -75,7 +75,7 @@ export default class screenController {
     // addTaskArea.appendChild(makeNewTaskButton());
     taskArea.id = "task-area";
     taskArea.className = "task-area";
-    // displayTasks(taskGrid);
+    screenController.displayTasks(taskGrid);
     taskArea.appendChild(projectTitle);
     taskArea.appendChild(taskGrid);
     taskArea.appendChild(addTaskArea);
@@ -101,6 +101,7 @@ export default class screenController {
   }
 
   // HELPER METHOD FOR REPEAT ACTIONS
+  // DISPLAYING PROJECTS
   static displayProjects(projectArea) {
     if (document.getElementById("projects-area") === null) {
       screenController.populateProjectArea(projectArea);
@@ -122,6 +123,29 @@ export default class screenController {
         projectEntry.id = projectName;
         projectEntry.textContent = projectName;
         projectArea.appendChild(projectEntry);
+      });
+  }
+
+  //   DISPLAYING TASKS
+  static displayTasks(taskGrid) {
+    if (document.getElementById("task-grid") === null) {
+      screenController.populateTaskArea(taskGrid);
+    } else {
+      document.getElementById("task-grid").innerHTML = "";
+      screenController.populateTaskArea(document.getElementById("task-grid"));
+    }
+  }
+
+  static populateTaskArea(taskGrid) {
+    todolist
+      .getActiveProject()
+      .getTasks()
+      .forEach((task) => {
+        const taskCard = document.createElement("div");
+        taskCard.className = "task";
+        taskCard.id = task.title; //Later change this to unique id
+        taskCard.textContent = task.title;
+        taskGrid.appendChild(taskCard);
       });
   }
 
@@ -167,7 +191,7 @@ export default class screenController {
     // creates a new project on submitting the form
     newProjectForm.onsubmit = (e) => {
       e.preventDefault();
-      if (todolist.addProject(new Project(projectNameInput.value, []))) {
+      if (todolist.addProject(new Project(projectNameInput.value))) {
         console.warn(`NEW PROJECT AAAAAH: ${projectNameInput.value}`);
         console.log(todolist.getProjects());
       }
@@ -179,139 +203,89 @@ export default class screenController {
       document
         .getElementById("add-project-area")
         .appendChild(screenController.makeNewProjectButton());
-        screenController.displayProjects();
+      screenController.displayProjects();
     };
     return newProjectForm;
   }
-}
 
-const makeSidebar = () => {
-  const sidebar = document.createElement("div");
-  sidebar.className = "sidebar";
-  // sidebar button to add a new project
+  static makeNewTaskEntry() {
+    const taskEntry = document.createElement("form");
+    taskEntry.id = "task-entry";
+    taskEntry.className = "task-entry";
+    // title
+    const taskTitleLabel = document.createElement("label");
+    const taskTitle = document.createElement("input");
+    taskTitle.type = "test";
+    taskTitle.placeholder = "Title";
+    taskTitle.required = true;
+    taskTitleLabel.htmlFor = "task-title";
+    taskTitle.id = taskTitleLabel.htmlFor;
+    // description
+    const taskDescriptionLabel = document.createElement("label");
+    const taskDescription = document.createElement("input");
+    taskDescription.type = "text";
+    taskDescription.placeholder = "Description...";
+    taskDescriptionLabel.htmlFor = "task-description";
+    taskDescription.id = taskDescriptionLabel.htmlFor;
+    // dueDate
+    const taskDueDateLabel = document.createElement("label");
+    const taskDueDate = document.createElement("input");
+    taskDueDate.type = "date";
+    taskDueDateLabel.htmlFor = "task-due-date";
+    taskDueDate.id = taskDueDateLabel.htmlFor;
 
-  // div which holds the project names
+    //   submit form button
+    const submitTaskButton = document.createElement("button");
+    //   submitTaskButton.type = "submit";
+    submitTaskButton.textContent = "Add task";
 
-  const projectsArea = document.createElement("div");
-  projectsArea.id = "projects-area";
-  displayProjects(projectsArea);
+    // add cancel form button
 
-  const addProjectButton = document.createElement("button");
-  addProjectButton.setAttribute("id", "new-project");
-  addProjectButton.textContent = "New Project";
-  addProjectButton.addEventListener("click", () => {
-    console.warn("Nothing");
-    console.log(displayProjects());
-    /*Add the logic for the following:
-    1. Bring up an input for a new project
-    2. Add the logic to the list of projects
-    3. Set the new project as the 'current' one and render it out */
-    displayProjects();
-  });
-  sidebar.appendChild(projectsArea);
-  sidebar.appendChild(addProjectButton);
-  sidebar.appendChild(makeProjectInput());
+    taskEntry.appendChild(taskTitleLabel);
+    taskEntry.appendChild(taskTitle);
+    taskEntry.appendChild(taskDescriptionLabel);
+    taskEntry.appendChild(taskDescription);
+    taskEntry.appendChild(taskDueDateLabel);
+    taskEntry.appendChild(taskDueDate);
+    taskEntry.appendChild(submitTaskButton);
+    // submit the task
+    taskEntry.onsubmit = (e) => {
+      e.preventDefault();
+      // create a new task object
+      const newTask = task.createTask(
+        taskTitle.value,
+        taskDescription.value,
+        taskDueDate.value,
+        0,
+        0,
+        0
+      );
+      project.addTask(newTask);
+      displayTasks(document.getElementById("task-grid"));
+      document.getElementById("add-task-area").innerHTML = "";
+      // push to task list
 
-  return sidebar;
-};
-
-const displayTasks = (taskGrid) => {
-  if (document.getElementById("task-grid") === null) {
-    populateTaskArea(taskGrid);
-  } else {
-    document.getElementById("task-grid").innerHTML = "";
-    populateTaskArea(document.getElementById("task-grid"));
+      // rerender tasks
+      // show add task button again
+      document.getElementById("add-task-area").appendChild(makeNewTaskButton());
+      console.log(project.getTasks());
+    };
+    return taskEntry;
   }
-};
 
-function populateTaskArea(taskGrid) {
-  Todos.getTasks().forEach((taskName) => {
-    const taskCard = document.createElement("div");
-    taskCard.classList.add("task");
-    taskCard.id = taskName.title;
-    taskCard.textContent = taskName.title;
-    taskGrid.appendChild(taskCard);
-  });
-}
-
-//  generates a new form for inputting a new task
-function makeNewTaskEntry() {
-  const taskEntry = document.createElement("form");
-  taskEntry.id = "task-entry";
-  taskEntry.className = "task-entry";
-  // title
-  const taskTitleLabel = document.createElement("label");
-  const taskTitle = document.createElement("input");
-  taskTitle.type = "test";
-  taskTitle.placeholder = "Title";
-  taskTitle.required = true;
-  taskTitleLabel.htmlFor = "task-title";
-  taskTitle.id = taskTitleLabel.htmlFor;
-  // description
-  const taskDescriptionLabel = document.createElement("label");
-  const taskDescription = document.createElement("input");
-  taskDescription.type = "text";
-  taskDescription.placeholder = "Description...";
-  taskDescriptionLabel.htmlFor = "task-description";
-  taskDescription.id = taskDescriptionLabel.htmlFor;
-  // dueDate
-  const taskDueDateLabel = document.createElement("label");
-  const taskDueDate = document.createElement("input");
-  taskDueDate.type = "date";
-  taskDueDateLabel.htmlFor = "task-due-date";
-  taskDueDate.id = taskDueDateLabel.htmlFor;
-
-  //   submit form button
-  const submitTaskButton = document.createElement("button");
-  //   submitTaskButton.type = "submit";
-  submitTaskButton.textContent = "Add task";
-
-  // add cancel form button
-
-  taskEntry.appendChild(taskTitleLabel);
-  taskEntry.appendChild(taskTitle);
-  taskEntry.appendChild(taskDescriptionLabel);
-  taskEntry.appendChild(taskDescription);
-  taskEntry.appendChild(taskDueDateLabel);
-  taskEntry.appendChild(taskDueDate);
-  taskEntry.appendChild(submitTaskButton);
-  // submit the task
-  taskEntry.onsubmit = (e) => {
-    e.preventDefault();
-    // create a new task object
-    const newTask = task.createTask(
-      taskTitle.value,
-      taskDescription.value,
-      taskDueDate.value,
-      0,
-      0,
-      0
-    );
-    project.addTask(newTask);
-    displayTasks(document.getElementById("task-grid"));
-    document.getElementById("add-task-area").innerHTML = "";
-    // push to task list
-
-    // rerender tasks
-    // show add task button again
-    document.getElementById("add-task-area").appendChild(makeNewTaskButton());
-    console.log(project.getTasks());
-  };
-  return taskEntry;
-}
-
-function makeNewTaskButton() {
-  const taskButton = document.createElement("button");
-  taskButton.setAttribute("id", "add-task");
-  taskButton.textContent = "Add Task";
-  taskButton.addEventListener("click", () => {
-    document.getElementById("add-task-area").innerHTML = "";
-    document.getElementById("add-task-area").appendChild(makeNewTaskEntry());
-    /*
+  static makeNewTaskButton() {
+    const taskButton = document.createElement("button");
+    taskButton.setAttribute("id", "add-task");
+    taskButton.textContent = "Add Task";
+    taskButton.addEventListener("click", () => {
+      document.getElementById("add-task-area").innerHTML = "";
+      document.getElementById("add-task-area").appendChild(makeNewTaskEntry());
+      /*
           1. Show up a form with entries for all defined Task properties
           2. Default "no-entry" values for most of them
       */
-    console.warn("We do a new task");
-  });
-  return taskButton;
+      console.warn("We do a new task");
+    });
+    return taskButton;
+  }
 }

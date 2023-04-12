@@ -7,24 +7,22 @@ For example: Work tasks, home tasks, sport tasks etc.
 import Todos from "./Todos";
 
 export default class Project {
-  constructor(projectName, taskList = []) {
+  constructor(projectName, taskList = [], active = false) {
     this.projectName = projectName;
     this.taskList = taskList;
+    this.active = active;
   }
-
 
   getTitle(project) {
     return project.projectName;
   }
 
-  getTasks(projectTitle) {
-    return todos
-      .getProjects()
-      .filter((project) => project.projectName === projectTitle)[0];
+  getTasks() {
+    return this.taskList;
   }
 
   addTask(task) {
-    todos.getProjects[0].taskList.push(task);
+    this.taskList.push(task);
   }
 }
 

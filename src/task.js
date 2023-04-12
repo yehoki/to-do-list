@@ -10,6 +10,13 @@ export default class Task {
     this.dueDate = dueDate
     this.priority = priority
   }
+
+  getTitle() {
+    return this.title
+  }
+
+
+
 }
 
 
