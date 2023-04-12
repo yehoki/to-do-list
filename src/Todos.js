@@ -37,10 +37,10 @@ export default class Todos {
     this.projects.filter((project) => project.projectName !== projectName);
   }
 
-  getProjectIndex(projectObject) {
+  getProjectIndexByName(projectTitle) {
     return this.projects
       .map((project) => project.projectName)
-      .indexOf(projectObject);
+      .indexOf(projectTitle);
   }
 
   getCurrentTasks() {
@@ -54,4 +54,16 @@ export default class Todos {
   getActiveProject() {
     return this.projects[this.getActiveProjectIndex()];
   }
+  
+  resetAllActive(){
+    this.projects.forEach((project) =>{
+        project.active = false;
+    })
+  }
+
+  setProjectActive(projectName){
+    this.resetAllActive();
+    this.projects[this.getProjectIndexByName(projectName)].setActive();
+  }
+
 }

@@ -24,6 +24,12 @@ export default class Project {
   addTask(task) {
     this.taskList.push(task);
   }
+
+  setActive() {
+    if(this.active === false){
+        this.active = true;
+    }
+  }
 }
 
 export {

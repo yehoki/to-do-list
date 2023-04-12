@@ -118,10 +118,14 @@ export default class screenController {
       .getProjects()
       .map((projectObject) => projectObject.projectName)
       .forEach((projectName) => {
-        const projectEntry = document.createElement("div");
+        const projectEntry = document.createElement("button");
         projectEntry.classList.add("project-tab");
         projectEntry.id = projectName;
         projectEntry.textContent = projectName;
+        projectEntry.addEventListener("click", () => {
+            todolist.setProjectActive(projectName);
+            screenController.displayTasks();
+        })
         projectArea.appendChild(projectEntry);
       });
   }
@@ -164,11 +168,10 @@ export default class screenController {
         WHEN WE CREATE A NEW PROJECT, THE BUTTON DISAPPEARS AND A FORM APPEARS
         ON SUBMIT FOR FORM THE FORM GETS SENT, DISAPPEARS AND THE BUTTON APPEARS
        */
-      //   console.log(displayProjects());
       /*Add the logic for the following:
-      1. Bring up an input for a new project
-      2. Add the logic to the list of projects
-      3. Set the new project as the 'current' one and render it out */
+      1. Bring up an input for a new project DONE
+      2. Add the logic to the list of projects DONE
+      3. Set the new project as the 'current' one and render it out DONE */
       screenController.displayProjects();
     });
     return addProjectButton;
