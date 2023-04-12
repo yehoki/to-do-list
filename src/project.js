@@ -17,6 +17,10 @@ export default class Project {
     return project.projectName;
   }
 
+  getName() {
+    return this.projectName;
+  }
+
   getTasks() {
     return this.taskList;
   }

@@ -60,8 +60,10 @@ export default class screenController {
     const addTaskArea = document.createElement("div");
 
     //   for now, leave as default - later change to display the selected project name
-    projectTitle.textContent =
-      Storage.getTodos().getActiveProject().projectName;
+    if (Storage.getTodos().getProjects().length > 0){
+        console.log("Test", Storage.getTodos().getActiveProject().getName());
+        projectTitle.textContent = Storage.getTodos().getActiveProject().getName();
+    }
     projectTitle.id = "project-title";
     taskGrid.id = "task-grid";
     taskGrid.className = "task-grid";
