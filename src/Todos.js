@@ -4,6 +4,7 @@ import Task from "./task";
 import { parseISO } from "date-fns";
 // const projectClass = new Project();
 
+
 export default class Todos {
   constructor() {
     this.projects = [
@@ -26,6 +27,10 @@ export default class Todos {
     return this.projects;
   }
 
+  setProjects(projects) {
+    this.projects = projects;
+  }
+
   addProject(projectObject) {
     const projectExists = this.getProjects().some(
       (project) =>
@@ -41,7 +46,7 @@ export default class Todos {
   }
 
   deleteProject(projectName) {
-    this.projects.filter((project) => project.projectName !== projectName);
+    this.projects = this.projects.filter((project) => project.projectName !== projectName);
   }
 
   getProjectIndexByName(projectTitle) {
@@ -59,7 +64,10 @@ export default class Todos {
   }
 
   getActiveProject() {
-    return this.projects[this.getActiveProjectIndex()];
+    if(this.projects.length > 0){
+        return this.projects[this.getActiveProjectIndex()];
+    }
+    return false;
   }
 
   resetAllActive() {

@@ -1,10 +1,8 @@
 // screenController will display the tasks to the DOM, so anything to do with the DOM and manipulating will be done from here
 import GithubIcon from "./github-mark.svg";
 import Project from "./project";
+import Storage from "./Storage";
 import Task from "./task";
-import Todos from "./Todos";
-
-const todolist = new Todos();
 
 export default class screenController {
   // DOM CREATION METHODS
@@ -37,7 +35,6 @@ export default class screenController {
   static makeSidebar() {
     const sidebar = document.createElement("div");
     sidebar.className = "sidebar";
-
     const projectsArea = document.createElement("div");
     projectsArea.id = "projects-area";
     screenController.displayProjects(projectsArea);
@@ -63,7 +60,9 @@ export default class screenController {
     const addTaskArea = document.createElement("div");
 
     //   for now, leave as default - later change to display the selected project name
-    projectTitle.textContent = "Default";
+    projectTitle.textContent =
+      Storage.getTodos().getActiveProject().projectName;
+    projectTitle.id = "project-title";
     taskGrid.id = "task-grid";
     taskGrid.className = "task-grid";
     //  the tasks will be displayed inside of the taskGrid element
@@ -114,18 +113,30 @@ export default class screenController {
   }
 
   static populateProjectArea(projectArea) {
-    todolist
+    Storage.getTodos()
       .getProjects()
       .map((projectObject) => projectObject.projectName)
       .forEach((projectName) => {
-        const projectEntry = document.createElement("button");
+        const projectEntry = document.createElement("div");
+        const projectButton = document.createElement("button");
+        const deleteProjectButton = document.createElement("button");
         projectEntry.classList.add("project-tab");
         projectEntry.id = projectName;
-        projectEntry.textContent = projectName;
-        projectEntry.addEventListener("click", () => {
-          todolist.setProjectActive(projectName);
+        projectButton.textContent = projectName;
+        projectButton.addEventListener("click", () => {
+          Storage.setProjectActive(projectName);
+          screenController.displayTasks();
+          document.getElementById("project-title").textContent =
+            Storage.getTodos().getActiveProject().projectName;
+        });
+        deleteProjectButton.textContent = "X";
+        deleteProjectButton.addEventListener("click", () => {
+          Storage.deleteProject(projectEntry.id);
+          this.displayProjects();
           screenController.displayTasks();
         });
+        projectEntry.appendChild(projectButton);
+        projectEntry.appendChild(deleteProjectButton);
         projectArea.appendChild(projectEntry);
       });
   }
@@ -140,7 +151,10 @@ export default class screenController {
     }
   }
   static populateTaskArea(taskGrid) {
-    todolist
+    if (!Storage.getTodos().getActiveProject()) {
+      return;
+    }
+    Storage.getTodos()
       .getActiveProject()
       .getTasks()
       .forEach((task) => {
@@ -148,16 +162,24 @@ export default class screenController {
         const taskTitle = document.createElement("h4");
         const taskDescription = document.createElement("div");
         const taskDueDate = document.createElement("div");
+        const deleteTaskButton = document.createElement("button");
         taskCard.className = "task";
         taskCard.id = task.title; //Later change this to unique id
         taskCard.style.backgroundColor = this.getPriorityColour(task.priority);
         taskTitle.textContent = task.title;
-        console.log(task.description, task.description === "");
-        taskDescription.textContent = task.description === "" ? "  " : task.description;
+        taskDescription.textContent =
+          task.description === "" ? "  " : task.description;
         taskDueDate.textContent = task.getFormattedDate();
+        deleteTaskButton.textContent = "X";
+        deleteTaskButton.id = task.title;
+        deleteTaskButton.addEventListener("click", () => {
+          Storage.deleteTask(deleteTaskButton.id);
+          screenController.displayTasks();
+        });
         taskCard.appendChild(taskTitle);
         taskCard.appendChild(taskDescription);
         taskCard.appendChild(taskDueDate);
+        taskCard.appendChild(deleteTaskButton);
         taskGrid.appendChild(taskCard);
       });
   }
@@ -204,14 +226,11 @@ export default class screenController {
     // creates a new project on submitting the form
     newProjectForm.onsubmit = (e) => {
       e.preventDefault();
-      if (todolist.addProject(new Project(projectNameInput.value))) {
-        console.warn(`NEW PROJECT AAAAAH: ${projectNameInput.value}`);
-        console.log(todolist.getProjects());
-      }
-
-      //   if (project.createProject(projectNameInput.value)) {
-      //     console.warn("New project added");
-      //   }
+      const newProject =
+        Storage.getTodos().getProjects().length > 0
+          ? new Project(projectNameInput.value)
+          : new Project(projectNameInput.value, [], true);
+      Storage.addProject(new Project(projectNameInput.value));
       document.getElementById("add-project-area").innerHTML = "";
       document
         .getElementById("add-project-area")
@@ -277,20 +296,16 @@ export default class screenController {
     // submit the task
     taskEntry.onsubmit = (e) => {
       e.preventDefault();
-      console.log(taskDueDate.value, taskDueDate.value === "");
-
       // create a new task object
-      todolist
-        .getActiveProject()
-        .addTask(
-          new Task(
-            taskTitle.value,
-            taskDescription.value,
-            taskDueDate.value,
-            taskPriority.value
-          )
-        );
-      
+      Storage.addTask(
+        new Task(
+          taskTitle.value,
+          taskDescription.value,
+          taskDueDate.value,
+          taskPriority.value
+        )
+      );
+
       screenController.displayTasks(document.getElementById("task-grid"));
       document.getElementById("add-task-area").innerHTML = "";
       document.getElementById("add-task-area").style.backgroundColor = "white";
@@ -301,7 +316,6 @@ export default class screenController {
       document
         .getElementById("add-task-area")
         .appendChild(screenController.makeNewTaskButton());
-      console.log(todolist.getCurrentTasks());
     };
     return taskEntry;
   }

@@ -25,15 +25,19 @@ export default class Project {
     this.taskList.push(task);
   }
 
+  setTasks(tasks) {
+    this.taskList = tasks;
+  }
+
   setActive() {
     if(this.active === false){
         this.active = true;
     }
   }
-}
-
-export {
-    Project
+  
+  deleteTask(taskName){
+    this.taskList = this.taskList.filter((task) => task.title !== taskName);
+  }
 }
 
 // our list of all projects, initialized as empty, will be populated with `Project` objects
