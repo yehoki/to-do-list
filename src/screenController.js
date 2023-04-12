@@ -145,9 +145,20 @@ export default class screenController {
       .getTasks()
       .forEach((task) => {
         const taskCard = document.createElement("div");
+        const taskTitle = document.createElement("h4");
+        const taskDescription = document.createElement("div");
+        const taskDueDate = document.createElement("div");
+        const taskPriority = document.createElement("div");
         taskCard.className = "task";
         taskCard.id = task.title; //Later change this to unique id
-        taskCard.textContent = task.title;
+        taskTitle.textContent = task.title;
+        taskDescription.textContent = task.description;
+        taskDueDate.textContent = task.getFormattedDate();
+        taskPriority.textContent = task.priority;
+        taskCard.appendChild(taskTitle);
+        taskCard.appendChild(taskDescription);
+        taskCard.appendChild(taskDueDate);
+        taskCard.appendChild(taskPriority);
         taskGrid.appendChild(taskCard);
       });
   }

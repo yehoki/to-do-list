@@ -1,7 +1,7 @@
 // import something
 import Project from "./project";
 import Task from "./task";
-
+import { parseISO } from "date-fns";
 // const projectClass = new Project();
 
 export default class Todos {
@@ -9,7 +9,14 @@ export default class Todos {
     this.projects = [
       new Project(
         "Test",
-        [new Task("test task", "test", "wqewq", "none")],
+        [
+          new Task(
+            "test task",
+            "test",
+            new Date(Date.parse(2023, 3, 12)),
+            "none"
+          ),
+        ],
         true
       ),
     ];
@@ -54,16 +61,15 @@ export default class Todos {
   getActiveProject() {
     return this.projects[this.getActiveProjectIndex()];
   }
-  
-  resetAllActive(){
-    this.projects.forEach((project) =>{
-        project.active = false;
-    })
+
+  resetAllActive() {
+    this.projects.forEach((project) => {
+      project.active = false;
+    });
   }
 
-  setProjectActive(projectName){
+  setProjectActive(projectName) {
     this.resetAllActive();
     this.projects[this.getProjectIndexByName(projectName)].setActive();
   }
-
 }
